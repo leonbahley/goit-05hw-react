@@ -1,23 +1,15 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { List } from 'pages/Reviews/Reviews.styled';
+import { List } from 'components/Reviews/Reviews.styled';
+import { fetchReviews } from 'API/API';
 
 export default function Reviews() {
   const [movieReviews, setMovieReviews] = useState([{}]);
   const { id } = useParams();
-  const APIKey = '0729fc5ff166ac1f365f9bc4f7e8ce78';
 
   useEffect(() => {
-    fetch(
-      `  https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${APIKey}`
-    )
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error('Something went wrong');
-      })
+    fetchReviews(id)
       .then(({ results }) => {
         setMovieReviews(
           results.map(item => ({

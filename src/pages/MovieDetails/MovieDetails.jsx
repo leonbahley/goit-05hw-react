@@ -4,6 +4,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Wrapper, MovieImg, StyledLink, BackLink } from './MovieDetails.styled';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
+import { fetchMovieDetails } from 'API/API';
 
 export default function MovieDetails() {
   const location = useLocation();
@@ -11,16 +12,9 @@ export default function MovieDetails() {
   const { id } = useParams();
   const [movieDetails, setMovieDetails] = useState({});
   const [genres, setGenres] = useState([]);
-  const APIKey = '0729fc5ff166ac1f365f9bc4f7e8ce78';
 
   useEffect(() => {
-    fetch(`  https://api.themoviedb.org/3/movie/${id}?api_key=${APIKey}`)
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error('Something went wrong');
-      })
+    fetchMovieDetails(id)
       .then(
         ({ poster_path, original_title, overview, genres, vote_average }) => {
           setMovieDetails({

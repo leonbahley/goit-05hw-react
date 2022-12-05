@@ -9,6 +9,7 @@ export default function SearchBar() {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') ?? '';
   const [queryMovieList, setQueryMovieList] = useState([]);
+  const [isActiveBtn, setIsActiveBtn] = useState(false);
   const APIKey = '0729fc5ff166ac1f365f9bc4f7e8ce78';
 
   useEffect(() => {
@@ -25,6 +26,10 @@ export default function SearchBar() {
         throw new Error('Something went wrong');
       })
       .then(({ results }) => {
+        if (!results.length) {
+          alert('No movie found');
+          return;
+        }
         setQueryMovieList(
           results.map(item => ({ name: item.original_title, id: item.id }))
         );
@@ -38,11 +43,20 @@ export default function SearchBar() {
     setSearchParams({ query: form.elements.query.value });
     form.reset();
   };
+
+  const handleChange = ({ target }) => {
+    if (target.value.length) {
+      setIsActiveBtn(true);
+    } else {
+      setIsActiveBtn(false);
+    }
+  };
+
   return (
     <>
       <Form onSubmit={handleSubmit}>
-        <Input type="text" name="query" />
-        <Button type="submit">
+        <Input type="text" name="query" onChange={handleChange} />
+        <Button type="submit" disabled={!isActiveBtn}>
           <AiOutlineSearch style={{ width: 15, height: 15 }} />
         </Button>
       </Form>

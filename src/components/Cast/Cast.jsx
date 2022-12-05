@@ -2,22 +2,14 @@ import { useParams } from 'react-router-dom';
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { List, CharacterName } from './Cast.styled';
+import { fetchCast } from '../../API/API';
 
 export default function Cast() {
   const [movieCast, setMovieCast] = useState([{}]);
   const { id } = useParams();
-  const APIKey = '0729fc5ff166ac1f365f9bc4f7e8ce78';
 
   useEffect(() => {
-    fetch(
-      `  https://api.themoviedb.org/3/movie/${id}/credits?api_key=${APIKey}`
-    )
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error('Something went wrong');
-      })
+    fetchCast(id)
       .then(({ cast }) => {
         setMovieCast(
           cast.map(item => ({
